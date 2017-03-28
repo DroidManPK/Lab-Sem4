@@ -1,0 +1,70 @@
+disp macro m
+lea dx,m
+mov ah,09
+int 21h
+endm
+
+.model small
+.data
+msg1 db "Enter file to read : $"
+msg2 db 13,10,"Enter file to write : $"
+buf db 00
+fi db 20 dup(0)
+msg db 13,10,"Written$"
+emsg db 13,10,"Error$"
+
+.code
+
+mov ax,@data
+mov ds,ax
+disp msg1
+lea si,fi
+call readstr
+lea dx,fi
+mov al,00
+mov ah,3dh
+int 21h
+jc error
+mov bx,ax
+disp msg2
+lea si,fi
+call readstr
+lea dx,fi
+mov al,01
+mov ah,3dh
+int 21h
+jc error
+mov di,ax
+nxt:mov cx,1h
+lea dx,buf
+mov ah,3fh
+int 21h
+jc error
+mov cx,ax
+push bx
+mov bx,di
+mov ah,40h
+int 21h
+jc error
+cmp ax,0000h
+jz ed
+mov di,bx
+pop bx
+jmp nxt
+error:disp emsg
+ed:disp msg
+mov ah,4ch
+int 21h
+
+readstr proc
+next : mov ah,01
+int 21h
+cmp al,0dh
+jz l1
+mov [si],al
+inc si
+jmp next
+l1:ret
+readstr endp
+end
+

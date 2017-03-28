@@ -1,0 +1,28 @@
+
+disp macro m
+lea dx,m
+mov ah,09h
+int 21h
+endm
+
+.model small
+.data
+msg1 db "Enter the pathname : $"
+file db 20 dup(0)
+msg db 13,10,"created$"
+emsg db 13,10,"Error$"
+.code
+mov ax,@data
+mov ds,ax
+extrn rfile:far
+disp msg1
+lea si,file
+call rfile
+jc error
+disp msg
+jmp ed
+error:disp emsg
+ed:mov ah,4ch
+int 21h
+end
+

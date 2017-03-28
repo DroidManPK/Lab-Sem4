@@ -1,0 +1,27 @@
+.model small
+.data
+num dd 12345678h
+len dw $-num
+o_msg db "odd parity$"
+e_msg db "Even parity$"
+.code
+mov ax,@data
+mov ds,ax
+mov cx,len
+mov bx,00
+lea si,num
+next:mov ax,00
+add al,[si]
+jp skip
+inc bx
+skip:inc si
+loop next
+lea dx,o_msg
+shr bx,01
+jc ed
+lea dx,e_msg
+ed:mov ah,09
+int 21h
+mov ah,4ch
+int 21h
+end

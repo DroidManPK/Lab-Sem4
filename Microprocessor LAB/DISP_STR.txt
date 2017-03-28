@@ -1,0 +1,42 @@
+.model small
+.data
+msg1 db "Enter a String $"
+msg2 db 0dh,0ah,"Enterd String :$"
+buff db 20,21 dup("$")
+msg3 db 0dh,0ah,"length:$"
+
+.code
+mov ax,@data
+mov ds,ax
+lea dx,msg1
+call disp
+
+lea dx,buff
+mov ah,0ah
+int 21h
+lea dx,msg2
+call disp
+mov al,buff[1]
+call convert
+mov ah,4ch
+int 21h
+disp proc
+mov ah,09
+int 21h
+ret
+disp endp
+
+convert proc
+aam
+add ax,3030h
+push ax
+mov dl,ah
+mov ah,02
+int 21h
+pop ax
+mov dl,al
+mov ah,02
+int 21h
+ret
+convert endp
+end

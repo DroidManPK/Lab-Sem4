@@ -1,0 +1,26 @@
+.model small
+.data
+
+list db 99h,90h,69h,79h,89h
+n db $-list
+sum db 2 dup(0)
+.code
+mov ax,@data
+mov ds,ax
+lea si,list
+mov ax,00
+mov cl,n
+repeat: add al,[si]
+daa
+jnc skip
+xchg ah,al
+add al,01
+daa
+xchg al,ah
+skip:inc si
+dec cl
+jnz repeat
+mov sum,ah
+mov sum+1,al
+int 3
+end

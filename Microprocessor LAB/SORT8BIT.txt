@@ -1,0 +1,23 @@
+.model small
+.data
+list db 30h,20h,10h,50h,40h
+len db $-list
+.code
+mov ax,@data
+mov ds,ax
+mov cl,len
+dec cl
+outloop:mov dl,cl
+lea si,list
+inloop:mov al,[si]
+inc si
+cmp al,[si]
+jbe no_ex
+xchg al,[si]
+mov [si-1],al
+no_ex:dec dl
+jnz inloop
+dec cl
+jnz outloop
+int 3
+end

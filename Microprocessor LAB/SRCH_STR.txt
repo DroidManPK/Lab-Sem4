@@ -1,0 +1,64 @@
+.model small
+ 
+.data
+str1 db "Random string$"
+len dw $-str1
+msg1 db 0dh,0ah,"Character is found$"
+msg2 db 0dh,0ah,"Character not found$"
+char db 's','$'
+msg3 db "The string is $"
+msg4 db 0dh,0ah,"The character is $"
+ 
+.code
+ 
+mov ax,@data
+mov ds,ax
+mov es,ax
+lea dx,msg3
+call disp
+lea dx,str1
+call disp
+lea dx,msg4
+call disp
+lea dx,char
+call disp
+ 
+mov al,char
+lea di,str1
+mov cx,len
+dec cx
+repnz scasb
+jnz emsg
+ 
+mov bx,len
+dec bx
+sub bx,cx
+mov ax,bx
+aam
+ 
+add ax,3030h
+mov bx,ax
+ 
+lea dx,msg1
+call disp
+mov dl,bh
+mov ah,02
+int 21h
+mov dl,bl
+mov ah,02
+int 21h
+jmp ed
+ 
+emsg:
+ lea dx,msg2
+ call disp
+ed:
+mov ah,4ch
+int 21h
+ 
+disp proc
+ mov ah,09
+ int 21h
+ ret
+disp endp
+end

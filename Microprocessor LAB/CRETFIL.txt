@@ -1,0 +1,21 @@
+.model small
+.code
+public rfile
+rfile proc far
+mov cx,00
+nxt : mov ah,01
+int 21h
+cmp al,0dh
+jz ed
+mov [si],al
+inc si
+inc cx
+jmp nxt
+ed:     sub si,cx
+        mov dx,si
+	mov ah,3ch
+	int 21h
+ret
+rfile endp
+end
+	

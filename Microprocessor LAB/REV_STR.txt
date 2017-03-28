@@ -1,0 +1,58 @@
+.model small
+.data
+
+src db "mysore$"
+len dw $-src
+dst db 20 dup("$")
+msg1 db "The given string is : $"
+msg db 0dh,0ah,"Palindrome$"
+msg2 db 0dh,0ah,"The reverse string is : $"
+emsg db 0dh,0ah,"Not palindrome$"
+
+.code
+mov ax,@data
+mov ds,ax
+mov es,ax
+
+lea dx,msg1
+call disp
+lea dx,src
+call disp
+mov cx,0000h
+mov cx,len
+dec cx
+lea si,src
+add si,cx
+lea di,dst
+
+dec si
+
+l1:std
+lodsb
+cld
+stosb
+loop l1
+lea dx,msg2
+call disp
+
+lea dx,dst
+call disp
+mov cx,len
+dec cx
+lea si,src
+lea di,dst
+repe cmpsb
+jnz error
+lea dx,msg
+jmp ed
+error:lea dx,emsg
+ed:call disp
+mov ah,4ch
+int 21h
+
+disp proc
+mov ah,09
+int 21h
+ret
+disp endp
+end

@@ -1,0 +1,60 @@
+.model small
+.data
+msg1 db "Enter X co-ordinate[0-49]:$"
+msg2 db 0dh,0ah,"Enter Y co-ordinate[0-18]:$"
+x db 00
+y db 00
+.code
+mov ax,@data
+mov ds,ax
+lea dx,msg1
+call disp
+call readin
+mov x,al
+lea dx,msg2
+call disp
+call readin
+mov y,al
+call clear
+mov dh,y
+mov dl,x
+call set_cur
+mov ah,01
+int 21h
+mov dx,0000
+call set_cur
+mov ah,4ch
+int 21h
+
+disp proc
+mov ah,09
+int 21h
+ret
+disp endp
+
+readin proc
+mov ah,01
+int 21h
+mov bl,al
+int 21h
+shl bl,04
+and al,0fh
+or al,bl
+ret
+readin endp
+clear proc
+mov ah,06
+mov bh,07
+mov cx,00
+mov dx,0FFFFh
+int 10h
+ret
+clear endp
+
+set_cur proc
+mov ah,02
+mov bh,00
+int 10h
+ret
+set_cur endp
+end

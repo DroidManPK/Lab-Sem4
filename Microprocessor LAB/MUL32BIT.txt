@@ -1,0 +1,27 @@
+.model small
+.data
+md dw 1234h,2222h
+mr dw 1111h,5678h
+prod dw 4 dup(0000)
+.code
+mov ax,@data
+mov ds,ax
+mov ax,md+2
+mul mr+2
+mov prod+6,ax
+mov prod+4,dx
+mov ax,md
+mul mr+2
+add prod+4,ax
+adc prod+2,dx
+mov ax,md+2
+mul mr
+add prod+4,ax
+adc prod+2,dx
+adc prod,dx
+mov ax,md
+mul mr
+add prod+2,ax
+adc prod,dx
+int 3
+end

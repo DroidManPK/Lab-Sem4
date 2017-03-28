@@ -1,0 +1,12 @@
+.model small
+.data
+extrn key:byte
+.code
+mov ax,@data
+mov ds,ax
+extrn disp_ch:far
+mov dl,key
+call disp_ch
+mov ah,4ch
+int 21h
+end

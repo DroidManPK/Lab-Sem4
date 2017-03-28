@@ -1,0 +1,16 @@
+.model small
+.data
+n1 dw 0FFFFH
+n2 dw 0008H
+dif dw 0000,0000
+
+.code
+mov ax,@data
+mov ds,ax
+mov bx,0000
+mov ax,n1
+sub ax,n2
+mov dif,bx
+mov dif+2,ax
+int 3
+end

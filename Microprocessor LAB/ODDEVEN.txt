@@ -1,0 +1,37 @@
+.model small
+.data
+list dw 8084h,9080h,8081h,9999h,9913h
+len db ($-list)/2
+od dw 3 dup(0)
+ocount db 00h
+ecount db 00h
+eve dw 2 dup(0)
+.code
+mov ax,@data
+mov ds,ax
+mov cl,len
+lea bx,list
+lea di,od
+lea si,eve
+mov cl,len
+mov ax,00
+repeat:mov ax,[bx]
+ror ax,01
+jc o
+rol ax,01
+mov [si],ax
+inc si
+inc si
+inc ecount
+jmp next
+o:rol ax,01
+mov [di],ax
+inc di
+inc di
+inc ocount
+next:inc bx
+inc bx
+dec cl
+jnz repeat
+int 3
+end

@@ -1,0 +1,57 @@
+;program to read and display string
+
+disp macro m
+ lea dx,m
+ mov ah,09
+ int 21h
+endm
+
+;read macro
+; mov ah,01
+; int 21h
+;endm
+
+;dispch macro
+; mov ah,02
+; int 21h
+;endm
+
+.model small
+.data
+msg1 db "Enter a string $"
+msg2 db 0ah,0dh,"Entered string is $"
+str1 db 20 dup ('$')
+
+.code
+mov ax,@data
+mov ds,ax
+disp msg1
+include F1.MAC
+include F2.MAC
+lea si,str1
+
+l2:
+ read
+ cmp al,0dh
+ je l1
+ mov [si],al
+ inc si
+ jmp l2
+
+l1:
+ disp msg2
+;lea si,str1
+ mov si,00
+disp1:
+ cmp str1[si],'$'
+ je ed
+ mov dl,str1[si]
+ dispch
+ inc si
+ jmp disp1
+
+ed:
+ mov ah,4ch
+ int 21h
+
+end

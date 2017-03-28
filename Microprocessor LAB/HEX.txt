@@ -1,0 +1,63 @@
+.model small
+.data
+msg1 db "Enter 8 bit Binary Code : $"
+msg2 db 13,10,"The hex equivalent is : $"
+HEX_Out   DB  "00", 13, 10, '$'   ; string with line feed and '$'-terminator
+.code
+mov ax,@data
+mov ds,ax
+lea dx,msg1
+call disp
+mov cx,08
+mov bx,0000h
+
+nxt:mov ah,01h
+	int 21h
+	cmp al,31h
+	jz one
+	shl bl,01
+	jmp lp
+one:shl bl,01
+	or bl,00000001b
+lp:	loop nxt
+
+lea dx,msg2
+call disp
+mov al,bl
+mov ah,00
+call IntegerToHexCalculated
+mov dx, OFFSET HEX_Out
+call disp
+mov ah,4ch
+int 21h
+
+disp proc
+mov ah,09h
+int 21h
+ret
+disp endp
+
+IntegerToHexCalculated PROC
+	mov di, OFFSET HEX_Out   
+    mov bx, ax                      ; BX = argument AX
+    shr bl, 4                       ; Isolate high nibble (i.e. 4 bits)
+    cmp bl, 10                      ; Hex 'A'-'F'?
+    jl .1                           ; No: skip next line
+    add bl, 7                       ; Yes: adjust number for ASCII conversion
+    .1:
+    add bl, 30h                     ; Convert to ASCII character
+    mov [di+0], bl                  ; Store character at the first place in the output string
+
+    mov bx, ax                      ; BX = argument AX (just to be on the safe side)
+    and bl, 0Fh                     ; Isolate low nibble (i.e. 4 bits)
+    cmp bl, 10                      ; Hex 'A'-'F'?
+    jl .2                           ; No: skip next line
+    add bl, 7                       ; Yes: adjust number for ASCII conversion
+    .2:
+    add bl, 30h                     ; Convert to ASCII character
+    mov [di+1], bl                  ; Store character at the second place in the output string
+
+    ret
+IntegerToHexCalculated ENDP
+
+end

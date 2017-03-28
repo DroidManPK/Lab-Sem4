@@ -1,0 +1,14 @@
+.model small
+.data
+arr db 0,1,4,9,16h,25h,36h,48h,64h,81h
+num db 05
+squ db 00
+.code
+mov ax,@data
+mov ds,ax
+lea bx,arr
+mov al,num
+xlat
+mov squ,al
+int 3
+end

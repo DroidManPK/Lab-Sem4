@@ -1,0 +1,47 @@
+read_str macro
+mov ah,0ah
+int 21h
+endm
+
+dispch macro
+mov ah,02
+int 21h
+endm
+
+dsp macro m
+mov ah,09
+lea dx,m
+int 21h
+endm
+
+.model small
+.data
+msg1 db "Enter a String : $"
+msg2 db 0dh,0ah,"Entered String is $"
+str1 db 20 dup("$")
+len db  00
+.code
+mov ax,@data
+mov ds,ax
+
+dsp msg1
+lea dx,str1
+mov cx,0000
+read_str
+mov cl,str1[1]
+lea di,str1
+dsp msg2
+mov si,02
+disp1:
+ cmp str1[si],'$'
+ je ed
+ mov dl,str1[si]
+ dispch
+ inc si
+ jmp disp1
+
+ed:
+ mov ah,4ch
+ int 21h
+
+end

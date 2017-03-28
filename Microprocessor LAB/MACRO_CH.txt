@@ -1,0 +1,32 @@
+disp macro m
+lea dx,m
+mov ah,09
+int 21h
+endm
+
+input macro
+mov ah,01
+int 21h
+endm
+
+output macro
+mov ah,02
+int 21h
+endm
+.model small
+.data
+msg1 db "Enter a char : $"
+msg2 db 0dh,0ah,"The char : $"
+.code
+
+mov ax,@data
+mov ds,ax
+disp msg1
+input
+push ax
+disp msg2
+pop dx
+output
+mov ah,4ch
+int 21h
+end

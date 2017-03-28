@@ -1,0 +1,27 @@
+.model small
+.data
+list db 30h,20h,10h,50h,40h
+len db $-list
+key db 50h
+loc db 00h
+pos db 00h
+.code
+mov ax,@data
+mov ds,ax
+mov cl,len
+lea si,list
+next:mov al,[si]
+cmp key,al
+jz found
+inc si
+dec cl
+jnz next
+jmp exi
+found:mov loc,0ffh
+mov dl,len
+sub dl,cl
+inc dl
+mov pos,dl
+exi:int 3
+end
+

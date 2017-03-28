@@ -1,0 +1,21 @@
+.model small
+.data
+        src db 10H,20H,30H,40H,50H
+        len db $-src
+        dst db 5 dup(0)
+.code
+        mov ax,@data
+        mov ds,ax
+        lea si,src+4
+        lea di,dst
+       ; add si,4
+        
+        mov cl,len
+  next_ele:mov al,[si]
+        mov [di],al
+        dec si
+        inc di
+        dec cl
+        jnz next_ele
+int 3
+end

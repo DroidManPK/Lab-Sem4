@@ -1,0 +1,55 @@
+.model small
+.code
+START: MOV BX, 00                                     ; initialize counter BX as  00
+REPEAT: PUSH BX                                       ; save the BX value in stack memory.
+       MOV AH, 07H                                       ; BIOS service number to clear the screen
+       MOV AL, 00H                                        ; Number of lines to scroll; 00 blank screen.
+       MOV BH, 0FH                                        ; attribute of character; 0F white and 00 black
+       MOV CX, 00H                                        ; CH=00 Y coordinate of upper left corner and   CL=00 X
+								; coordinate of upper right corner
+       MOV DH, 31H                                        ; Number of rows; Lower right row
+       MOV DL, 79H                                        ; Number of rows; Lower right row
+       INT 10H                                                  ; BIOS interrupt to clear the screen is invoked
+       MOV AH, 02H                                       ;BIOS service number to set the cursor
+       MOV BH, 00H                                        ; set video Page number to 0
+       MOV DH, 0CH                                       ; store row number in DH (Y coordinate)
+       MOV DL, 25H                                        ; store the column number (X)  in DL register
+       INT 10H                                                  ; BIOS interrupt to set the cursor is invoked
+       POP BX                                                   ; pop the counter value stored in stack to BX
+       MOV AL, BL                                          ;  copy the 8 bit (1 byte) counter value in BL to AL
+       AAM                                                        ; convert Hex value in AL to unpacked BCD
+       ADD AX, 3030H                                                ; add 3030H to AX,  to get the ASCII code of the converted no.
+       MOV CX, AX                                         ; store AX value temporally in CX
+       MOV DL, AH                                         ; display the upper digit of the counter value on the screen
+       MOV AH, 02H                                        ; using 02H service no. with DOS 21H interrupt.
+       INT 21H
+       MOV DL, CL                                          ; display the lower digit of the counter value on the screen  
+       MOV AH, 02H                                        ; using 02H service no. with DOS 21H interrupt
+       INT 21H
+       CALL DELAY                                ; call DELAY procedure, to provide some delay after each counter display
+       INC BL                                                    ; increment BL (counter value) by 1
+       CMP BL, 100                                          ; compare this counter value in BL with 100
+       JNE REPEAT                                            ; if the counter value is < 100, then jump to label REPEAT
+       MOV AH, 0BH                                       ; otherwise, check the keyboard status, so that any key is
+       INT 21H                                                  ; pressed during counter display (00-99). This can be done by
+                                                                        ; using service no. 0BH with DOS 21H. If any key is pressed,
+							; then AL is set to FFH otherwise AL = 00
+      CMP AL, 00H                                          ; compare AL with 00
+      JE START                                                  ; if  AL=00, then none of the key is pressed during counter display.
+                                                                        ; so jump to START and again display the counter value from 00-99
+      
+      MOV AH, 4CH                                        ; otherwise if any key is pressed, then terminate the program
+      INT 21H
+DELAY PROC NEAR                                ; start of delay procedure
+PUSH CX                                                       ; save the values of CX and DX in stack, since these registers
+PUSH DX                                                       ; are used within the program
+MOV DX, 0FFFH                                          ; delay counter values
+B2: MOV CX, 0FFFFH
+B1: LOOP B1
+DEC DX
+JNZ B2
+POP DX                                                          ; reload the original values of CX and DX from stack
+POP CX
+RET                                                                ; return to calling program
+DELAY ENDP  
+end       

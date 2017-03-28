@@ -1,0 +1,33 @@
+disp macro m
+lea dx,m
+mov ah,09h
+int 21h
+endm
+
+.model small
+.data
+msg db 13,10,"Enter the PASSWORD : $"
+pa db "PASSWORD"
+len dw $-pa
+msg1 db 13,10,"You are authorized$"
+emsg db 13,10,"Wrong password try again$"
+.code
+mov ax,@data
+mov ds,ax
+
+l1: disp msg
+mov cx,len
+lea si,pa
+nxt : mov ah,08h
+	int 21h
+	cmp al,[si]
+	jnz error
+	inc si
+	loop nxt
+	disp msg1
+	jmp ed
+error : disp emsg
+	jmp l1
+ed : mov ah,4ch
+	int 21h
+end

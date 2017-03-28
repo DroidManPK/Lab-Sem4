@@ -1,0 +1,51 @@
+;program to display system time
+
+.model small
+.data
+hr db 00
+min db 00
+sec db 00
+
+.code
+mov ax,@data
+mov ds,ax
+
+mov ah,2ch
+int 21h
+mov hr,ch
+mov min,cl
+mov sec,dh
+
+mov al,hr
+call convert
+mov dl,':'
+call dispch
+mov al,min
+call convert
+mov dl,':'
+call dispch
+mov al,sec
+call convert
+
+mov ah,4ch
+int 21h
+
+convert proc
+ aam
+ add ax,3030h
+ mov bx,ax
+ mov dl,ah
+ call dispch
+ mov dl,bl
+ call dispch
+ ret
+convert endp
+
+dispch proc
+ mov ah,02
+ int 21h
+ ret
+dispch endp
+
+end
+

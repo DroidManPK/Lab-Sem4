@@ -1,0 +1,20 @@
+.model small
+.data
+
+n1 db 0H
+n2 db 01H
+sum db 00,00
+
+.code
+mov ax,@data
+mov ds,ax
+mov bl,00
+mov al,n1
+add al,n2
+jnc l1
+inc bl
+l1:
+mov sum,bl
+mov sum+1,al
+int 3
+end

@@ -1,0 +1,50 @@
+.model small
+.data
+mstr  db "Mysore$"
+lenm dw $-mstr
+sstr db "so$"
+len_s dw $-sstr
+msg1 db "main string : $"
+msg2 db 0dh,0ah,"Substring : $"
+msg db 0dh,0ah,"Found$"
+emsg db  0dh,0ah,"Not found$"
+.code
+
+mov ax,@data
+mov ds,ax
+mov es,ax
+lea dx,msg1
+call disp
+lea dx,mstr
+call disp
+lea dx,msg2
+call disp
+lea dx,sstr
+call disp
+lea si,mstr
+mov dx,lenm
+dec dx
+l1:mov cx,len_s
+dec cx
+cmp dx,cx
+jb error
+push si
+lea di,sstr
+repe cmpsb
+jz succ
+pop si
+inc si
+dec dx
+jmp l1
+error : lea dx,emsg
+jmp ed
+succ : lea dx,msg
+ed : call disp
+mov ah,4ch
+int 21h
+disp proc
+mov ah,09
+int 21h
+ret
+disp endp
+end

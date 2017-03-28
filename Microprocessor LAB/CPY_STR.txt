@@ -1,0 +1,34 @@
+.model small
+.data
+msg1 db "Input string",0dh,0ah,"$"
+msg2 db "Text string to copy$"
+len db $-msg2
+msg3 db 0dh,0ah,"Copied String : $"
+cpy db 20 dup("$")
+
+.code
+mov ax,@data
+mov ds,ax
+mov es,ax
+mov cx,00
+mov cl,len
+dec cl
+lea si,msg2
+lea di,cpy
+rep movsb
+lea dx,msg1
+call disp
+lea dx,msg2
+call disp
+lea dx,msg3
+call disp
+lea dx,cpy
+call disp
+mov ah,4ch
+int 21h
+disp proc
+mov ah,09h
+int 21h
+ret
+disp endp
+end

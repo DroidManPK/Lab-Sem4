@@ -1,0 +1,88 @@
+disp macro m
+mov dl,m
+mov ah,02
+int 21h
+endm
+
+disp1 macro m
+lea dx,m
+mov ah,09
+int 21h
+endm
+
+.model small
+.data
+
+msg db "Enter file name : $"
+msg1 db 13,10,"The file contents : ",13,10,"$"
+f db 20 dup(0)
+fi db 00
+emsg db "Error opening$"
+e1msg db "Error in handle$"
+HEX_Out   DB  "00", 13, 10, '$'   
+
+.code
+
+mov ax,@data
+mov ds,ax
+disp1 msg
+lea si,f
+nxt : mov ah,01
+int 21h
+cmp al,0dh
+jz l1
+mov [si],al
+inc si
+jmp nxt
+l1:
+;disp1 f
+
+disp1 msg1
+lea dx,f
+mov al,02
+mov ah,3dh
+int 21h
+jc er
+mov bx,ax
+
+next:mov cx,1h
+lea dx,fi
+mov ah,3fh
+int 21h
+jc error
+cmp ax,0000h
+jz ed
+disp fi
+jmp next
+error:disp1 e1msg
+call hexdisp
+disp1 HEX_Out
+er:call hexdisp
+disp1 HEX_Out
+disp1 emsg
+ed: mov ah,4ch
+int 21h
+
+hexdisp PROC
+    mov di, OFFSET HEX_Out   
+    mov bx, ax                      ; BX = argument AX
+    shr bl, 4                       ; Isolate high nibble (i.e. 4 bits)
+    cmp bl, 10                      ; Hex 'A'-'F'?
+    jl .1                           ; No: skip next line
+    add bl, 7                       ; Yes: adjust number for ASCII conversion
+    .1:
+    add bl, 30h                     ; Convert to ASCII character
+    mov [di+0], bl                  ; Store character at the first place in the output string
+
+    mov bx, ax                      ; BX = argument AX (just to be on the safe side)
+    and bl, 0Fh                     ; Isolate low nibble (i.e. 4 bits)
+    cmp bl, 10                      ; Hex 'A'-'F'?
+    jl .2                           ; No: skip next line
+    add bl, 7                       ; Yes: adjust number for ASCII conversion
+    .2:
+    add bl, 30h                     ; Convert to ASCII character
+    mov [di+1], bl                  ; Store character at the second place in the output string
+
+    ret
+hexdisp ENDP
+end

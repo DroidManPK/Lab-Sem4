@@ -1,0 +1,21 @@
+.model small
+.data
+n1 db 11h
+n2 db 66h
+diff db 00
+.code
+mov ax,@data
+mov ds,ax
+mov ax,00
+mov al,n1
+sub al,n2
+das
+jnc l1
+mov ah,al
+mov al,99h
+sub al,ah
+add al,01
+daa
+l1:mov diff,al
+int 3
+end

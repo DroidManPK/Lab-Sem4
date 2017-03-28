@@ -1,0 +1,22 @@
+.model small
+.data
+        num dw 1111,2222,3333,4444,5555
+        len db ($-num)/2
+        sum dw 0000,0000
+.code
+        mov ax,@data
+        mov ds,ax
+        mov bx,0000
+        lea si,num
+        mov cl,len
+        mov ax,0000
+  next_ele:add ax,[si]
+  jnc l1
+  inc bx
+  l1:inc si
+  dec cl
+  jnz next_ele
+  mov sum,bx
+  mov sum+2,ax
+  int 3
+  end

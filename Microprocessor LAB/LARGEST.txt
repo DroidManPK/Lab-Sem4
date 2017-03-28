@@ -1,0 +1,22 @@
+.model small
+.data
+list db 10h,22h,05h,65h,35h
+len db $-list
+larg db 00
+.code
+mov ax,@data
+mov ds,ax
+mov cl,len
+lea si,list
+mov al,[si]
+inc si
+dec cl
+find:cmp al,[si]
+jae no_change
+mov al,[si]
+no_change:inc si
+dec cl
+jnz find
+mov larg,al
+int 3
+end

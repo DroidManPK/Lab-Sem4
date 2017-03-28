@@ -1,0 +1,10 @@
+.model small
+.code
+mov si,2000H
+mov al,0FFH
+l1:mov [si],al
+inc si
+cmp si,2010H
+jnz l1
+int 3
+end

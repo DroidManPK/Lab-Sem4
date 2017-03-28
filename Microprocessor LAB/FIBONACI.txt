@@ -1,0 +1,22 @@
+.model small
+.data
+n db 9h
+num db 00H
+fib db 10 dup(00)
+.code
+mov ax,@data
+mov ds,ax
+mov cl,n
+lea si,fib
+mov byte ptr[si],00
+inc si
+mov byte ptr[si],01
+sub cl,02
+mov al,[si]
+nxt:add al,[si-1]
+inc si
+mov [si],al
+dec cl
+jnz nxt
+int 3
+end

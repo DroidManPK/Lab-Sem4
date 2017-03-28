@@ -1,0 +1,19 @@
+.model small
+.data
+n1 dw 0FFFFh,0FFFFH
+n2 dw 1111H,1111H
+sum dw 4 dup(0)
+.code
+mov ax,@data
+mov ds,ax
+mov ax,n1+2
+add ax,n2+2
+mov sum+4,ax
+mov ax,n1
+adc ax,n2
+jnc l1
+inc bx
+l1:mov sum+2,ax
+mov sum,bx
+int 3
+end

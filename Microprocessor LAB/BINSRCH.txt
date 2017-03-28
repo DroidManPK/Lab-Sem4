@@ -1,0 +1,40 @@
+.model small
+.data
+list dw 1111h,2222h,3333h,4444h,5555h
+n dw ($-list)/2
+key dw 2222h
+msg db "Found$"
+emsg db "Not Found$"
+
+.code
+mov ax,@data
+mov ds,ax
+
+mov ax,key
+mov bx,00
+mov cx,n
+;dec cx
+next:cmp bx,cx
+ja n_found
+mov dx,bx
+add dx,cx
+shr dx,01
+mov si,dx
+add si,si
+cmp ax,list[si]
+jae set_low
+dec dx
+mov cx,dx
+jmp next
+set_low:je found
+inc dx
+mov bx,dx
+jmp next
+found:lea dx,msg
+      jmp ed
+n_found:lea dx,emsg
+ed:mov ah,09
+   int 21h
+   mov ah,4ch
+    int 21h
+end

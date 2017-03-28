@@ -1,0 +1,10 @@
+.model small
+.code
+mov al,'9'
+mov bl,'6'
+mov cl,04
+shl al,cl
+and bl,0fh
+or al,bl
+int 3
+end

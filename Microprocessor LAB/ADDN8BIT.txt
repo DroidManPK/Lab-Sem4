@@ -1,0 +1,22 @@
+.model small
+.data
+        num db 99H,98H,99H,0EAH,99H
+        len db $-num
+        sum db 00,00
+.code
+        mov ax,@data
+        mov ds,ax
+        mov bl,00
+        lea si,num
+        mov cl,len
+        mov al,00
+  next_ele:add al,[si]
+  jnc l1
+  inc bl
+  l1:inc si
+  dec cl
+  jnz next_ele
+  mov sum,bl
+  mov sum+1,al
+  int 3
+  end

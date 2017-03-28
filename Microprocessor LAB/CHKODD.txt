@@ -1,0 +1,13 @@
+.model small
+.data
+num db 86h
+loc db 00h
+.code
+mov ax,@data
+mov ds,ax
+mov al,num
+ror al,01
+jnc l1
+mov loc,0FFH
+l1:int 3
+end

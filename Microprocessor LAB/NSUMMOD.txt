@@ -1,0 +1,60 @@
+.model small
+.data
+msg1 db "Enter the number of elements : $"
+msg2 db 13,10,"Enter the elements: $"
+HEX_Out   DB  "00",'$'
+nl db 13,10,"$"
+msg3 db 13,10,"Result $"
+arr db 50 dup(0)
+len db 00
+
+.code
+mov ax,@data
+mov ds,ax
+extrn readin:far
+extrn disp_dig:far
+extrn hexdisp:far
+lea dx,msg1
+call disp
+call readin
+mov len,al
+lea dx,msg2
+call disp
+mov cl,len
+lea si,arr
+l1 : call readin
+mov [si],al
+lea dx,nl
+call disp
+inc si
+loop l1
+
+mov bx,0000
+mov ax,0000
+lea si,arr
+nxt:add ax,[si]
+jnc nc
+inc bx
+nc:inc si
+inc si
+dec cl
+jnz nxt
+xchg ax,bx
+lea di,HEX_Out
+call hexdisp
+lea dx,HEX_Out
+call disp
+xchg ax,bx
+lea di,HEX_Out
+call hexdisp
+lea dx,HEX_Out
+call disp
+mov ah,4ch
+int 21h
+
+disp proc
+mov ah,09
+int 21h
+ret
+disp endp
+end

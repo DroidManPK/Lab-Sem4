@@ -1,0 +1,53 @@
+read_str macro
+nxt: mov ah,01
+int 21h
+cmp al,0dh
+jz ed
+mov [si],al
+inc si
+inc cl
+jmp nxt
+ed:nop
+read_str endm
+
+disp_chr macro
+
+mov ah,02
+int 21h
+disp_chr endm
+
+disp macro m
+mov ah,09
+lea dx,m
+int 21h
+disp endm
+
+.model small
+.data
+msg1 db "Enter a String : $"
+msg2 db 0dh,0ah,"Entered String is $"
+str db 20 dup("$")
+len db  00
+.code
+mov ax,@data
+mov ds,ax
+
+disp msg1
+lea si,str
+mov cx,0000
+read_str
+mov len,cx
+lea di,str
+disp msg2
+mov cx,len
+dec cx
+l1: mov dl,[di]
+inc di
+disp_chr
+dec cx
+jnz l1
+
+mov ah,4ch
+int 21h
+end
+

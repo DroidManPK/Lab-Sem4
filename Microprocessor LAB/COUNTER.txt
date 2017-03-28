@@ -1,0 +1,38 @@
+disp macro
+aam
+add ax,3030h
+push ax
+mov dl,ah
+mov ah,02h
+int 21h
+pop ax
+mov dl,al
+mov ah,02h
+int 21h
+mov dl,13
+int 21h
+mov dl,10
+int 21h
+endm
+
+disp1 macro m
+lea dx,m
+mov ah,09h
+int 21h
+endm
+
+.model small
+.code
+mov cx,100
+mov bx,0000
+
+l1 : mov al,bl
+mov ah,00
+disp
+inc bl
+loop l1
+
+mov ah,4ch
+int 21h
+
+end

@@ -1,0 +1,15 @@
+.model small
+.data
+arr db '0123456789ABCDEF'
+num db 0Fh
+squ db 00
+.code
+mov ax,@data
+mov ds,ax
+lea bx,arr
+mov al,num
+xlat
+add ax,20h
+mov squ,al
+int 3
+end

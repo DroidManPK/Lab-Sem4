@@ -1,0 +1,42 @@
+.model small
+.code
+
+public disp_dig
+disp_dig proc
+mov ah,00
+aam
+add ax,3030h
+push ax
+mov dl,ah
+mov ah,02
+int 21h
+pop ax
+mov dl,al
+mov ah,02
+int 21h
+ret
+disp_dig endp
+public hexdisp
+hexdisp PROC
+    mov bx, ax                      ; BX = argument AX
+    shr bl, 4                       ; Isolate high nibble (i.e. 4 bits)
+    cmp bl, 10                      ; Hex 'A'-'F'?
+    jl .1                           ; No: skip next line
+    add bl, 7                       ; Yes: adjust number for ASCII conversion
+    .1:
+    add bl, 30h                     ; Convert to ASCII character
+    mov [di+0], bl                  ; Store character at the first place in the output string
+
+    mov bx, ax                      ; BX = argument AX (just to be on the safe side)
+    and bl, 0Fh                     ; Isolate low nibble (i.e. 4 bits)
+    cmp bl, 10                      ; Hex 'A'-'F'?
+    jl .2                           ; No: skip next line
+    add bl, 7                       ; Yes: adjust number for ASCII conversion
+    .2:
+    add bl, 30h                     ; Convert to ASCII character
+    mov [di+1], bl                  ; Store character at the second place in the output string
+
+    ret
+hexdisp ENDP
+
+end
